@@ -1,0 +1,58 @@
+{
+    "description": "Some test data",
+    "version": "1",
+    "indicators": [
+        {
+            "id": "9364a191-f7f1-46ad-875c-e80f61740dca",
+            "descriptor": {
+                "description": "Spearphish attacker",
+                "category": "spyware",
+                "author": "someone@example.com",
+                "source": "id:3245edd9-e0f3-4982-9406-fbf93b874555",
+                "type": "email",
+                "value": "malware@malware.org"
+            },
+            "type": "email",
+            "value": "malware@malware.org"
+        },
+        {
+            "id": "6b7aa83f-8c43-4aaa-817f-5039adef19ef",
+            "descriptor": {
+                "description": "URL of a page serving malware",
+                "category": "malware",
+                "author": "someone@example.com",
+                "source": "id:3245edd9-e0f3-4982-9406-fbf93b874555",
+                "type": "url",
+                "value": "http://malware.org/malware.dat"
+            },
+            "and": [
+                {
+                    "or": [
+                        {
+                            "type": "url",
+                            "value": "http://www.malware.org/malware.dat"
+                        },
+                        {
+                            "type": "url",
+                            "value": "http://malware.org/malware.dat"
+                        }
+                    ]
+                },
+                {
+                    "not": {
+                        "or": [
+                            {
+                                "type": "port",
+                                "value": "222"
+                            },
+                            {
+                                "type": "port",
+                                "value": "224"
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ]
+}
