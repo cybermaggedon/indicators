@@ -14,15 +14,15 @@ func main() {
 		log.Fatalf("Error: %v", err)
 	}
 
-	fsmc := CreateFsmCollection(ii)
+	fsmc := det.CreateFsmCollection(ii)
 
 	fsmc.Reset()
 	fsmc.Dump()
-	fsmc.Update(Token{Type:"tcp", Value:"80"})
+	fsmc.Update(det.Token{Type:"tcp", Value:"80"})
 	fsmc.Dump()
-	fsmc.Update(Token{Type:"url", Value:"http://www.example.com/malware.dat"})
+	fsmc.Update(det.Token{Type:"url", Value:"http://www.example.com/malware.dat"})
 	fsmc.Dump()
-	fsmc.Update(Token{Type:"end", Value:""})
+	fsmc.Update(det.Token{Type:"end", Value:""})
 	fsmc.Dump()
 	hits := fsmc.GetHits()
 
