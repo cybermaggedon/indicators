@@ -4,11 +4,12 @@ package main
 import (
 	"log"
 	"fmt"
+	det "github.com/cybermaggedon/detector"
 )
 
 func main() {
 
-	ii, err := LoadIndicatorsFromFile("ind3.json")
+	ii, err := det.LoadIndicatorsFromFile("ind3.json")
 	if err != nil {
 		log.Fatalf("Error: %v", err)
 	}

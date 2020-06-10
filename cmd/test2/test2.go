@@ -3,12 +3,13 @@ package main
 
 import (
 	"log"
-//	"fmt"
+	det "github.com/cybermaggedon/detector"
+	
 )
 
 func main() {
 
-	ii, err := LoadIndicatorsFromFile("ind3.json")
+	ii, err := det.LoadIndicatorsFromFile("ind3.json")
 	if err != nil {
 		log.Fatalf("Error: %v", err)
 	}
@@ -28,13 +29,6 @@ func main() {
 	for _, hit := range hits {
 		hit.Dump()
 	}
-
-	/*
-	for k, v := range *fsmm {
-		fmt.Printf("%s -> %s:%s -> %s\n",
-			k.State, k.Token.Type, k.Token.Value, v)
-	}
-*/
 
 	_ = fsmc
 	
