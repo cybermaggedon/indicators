@@ -1,4 +1,3 @@
-
 package detector
 
 import (
@@ -10,7 +9,7 @@ import (
 
 // Represents a type/value pair.
 type Token struct {
-	Type string
+	Type  string
 	Value string
 }
 
@@ -25,18 +24,18 @@ type FsmTransition struct {
 
 	// The state to transition to
 	Next string
-
 }
 
-// An Fsm is an array of transitions.  This is how the FSM is represented when we're working
-// on it.  Once complete, the FSM is converted to an FsmMap which is a structure optimised
-// for navigation.
+// An Fsm is an array of transitions.  This is how the FSM is represented
+// when we're working on it.  Once complete, the FSM is converted to an
+// FsmMap which is a structure optimised for navigation.
 type Fsm struct {
 	Transitions []FsmTransition
 }
 
-// Describes an event causing an FSM transition, consists of a current state, and a token.
-type FsmEvent struct{
+// Describes an event causing an FSM transition, consists of a current
+// state, and a token.
+type FsmEvent struct {
 	State string
 	Token Token
 }
@@ -62,8 +61,8 @@ func (fsm *Fsm) Mapify() *FsmMap {
 
 }
 
-// Returns array of activators, which is the tokens which take the FSM out of the
-// 'init' state.
+// Returns array of activators, which is the tokens which take the FSM out
+// of the 'init' state.
 func (fsm *Fsm) GetActivators() []Token {
 	activs := map[Token]bool{}
 	for _, transition := range fsm.Transitions {
@@ -80,16 +79,17 @@ func (fsm *Fsm) GetActivators() []Token {
 	}
 
 	return lst
-	
+
 }
 
 // Flattens an FSM, compacts all edges to the same current/next transition.
-// (current, [token1], next), (current, [token2], next) -> (current, [token1, token2], next)
+// (current, [token1], next), (current, [token2], next) -> (current,
+// [token1, token2], next)
 func (fsm *Fsm) Flatten() {
 
 	type Path struct {
 		Current string
-		Next string
+		Next    string
 	}
 
 	// Convert to map
@@ -114,11 +114,11 @@ func (fsm *Fsm) Flatten() {
 	for k, v := range transitions {
 		fsm.Transitions = append(fsm.Transitions, FsmTransition{k.Current, v, k.Next})
 	}
-	
+
 }
 
-// Removes unnavigable transitions from the FSM.  Two types of unnavigable transitions are
-// discovered:
+// Removes unnavigable transitions from the FSM.  Two types of unnavigable
+// transitions are discovered:
 // - those which cannot lead to 'hit' are re-labeled as 'fail'.
 // - those which cannot be discovered from 'init' are removed altogether.
 func (fsm *Fsm) RemoveInvalidTransitions(n *Navigator) {
@@ -139,7 +139,7 @@ func (fsm *Fsm) RemoveInvalidTransitions(n *Navigator) {
 		}
 		last_run_size = len(valid_hit_states)
 	}
-	
+
 	valid_trav_states := make(map[string]bool)
 	valid_trav_states["init"] = true
 
@@ -209,25 +209,25 @@ func NameCombinationState(comb *Combination, n *Navigator, l *Term) string {
 
 }
 
-// Takes a set of terms in the form of a channel, and returns all term combinations,
-// including all terms and the empty set.
+// Takes a set of terms in the form of a channel, and returns all term
+// combinations, including all terms and the empty set.
 // e.g. [s2, s5] -> {[], [s2], [s5], [s2, s5]}
 func GetCombinations(l chan *Term) Combinations {
 
-	// Basic design is, this is recursive.  This recursion takes the first element
-	// from the channel, and delegates the rest of the channel to a further recursive
-	// call of this function.
-	
+	// Basic design is, this is recursive.  This recursion takes the
+	// first element from the channel, and delegates the rest of the
+	// channel to a further recursive call of this function.
+
 	// Get first element from channel.
-	elt, ok := <- l
+	elt, ok := <-l
 
 	// If list is empty, return a list containing only the empty set.
 	if !ok {
 		return Combinations{NewCombination()}
 	}
 
-	// Recurse the next level down.  Return the combination for everything else in this
-	// set.
+	// Recurse the next level down.  Return the combination for
+	// everything else in this set.
 	subset := GetCombinations(l)
 
 	// For this recursion start a new array.
@@ -250,9 +250,9 @@ func GetCombinations(l chan *Term) Combinations {
 
 }
 
-// Return new state which describes what happens when this particular token is term
-// is observed.
-func (i *Indicator) ExerciseToken(current Combination, term *Term, n *Navigator) (Combination) {
+// Return new state which describes what happens when this particular token
+// is term is observed.
+func (i *Indicator) ExerciseToken(current Combination, term *Term, n *Navigator) Combination {
 
 	// Start with a copy of the 'current' state.
 	next := current.Copy()
@@ -271,8 +271,8 @@ func (i *Indicator) ExerciseToken(current Combination, term *Term, n *Navigator)
 
 }
 
-// Extract all FSM transition by exercising all possible terms in all possible basic
-// state combinations.
+// Extract all FSM transition by exercising all possible terms in all
+// possible basic state combinations.
 func (i *Indicator) ExtractTransitions(basic_combis Combinations, terms []*Term, n *Navigator) *Fsm {
 
 	// Start with transitions as an empty array
@@ -290,12 +290,12 @@ func (i *Indicator) ExtractTransitions(basic_combis Combinations, terms []*Term,
 		// Iterate over all terms
 		for _, term := range terms {
 
-			// Get the state which results from observing this token in
-			// the current state
+			// Get the state which results from observing this
+			// token in the current state
 			newstate := i.ExerciseToken(comb, term, n)
 
-			// The new state combination is reduced by taking out all states
-			// which aren't basic states.
+			// The new state combination is reduced by taking
+			// out all states which aren't basic states.
 			newstate2 := NewCombination()
 			for v := range newstate.Iter() {
 				if n.basic_states.Contains(v) {
@@ -306,7 +306,8 @@ func (i *Indicator) ExtractTransitions(basic_combis Combinations, terms []*Term,
 			// Convert this new state to a state name.
 			next_state := NameCombinationState(&newstate2, n, root)
 
-			// If the term causes no state transition, we can move on.
+			// If the term causes no state transition, we can
+			// move on.
 			if cur_state == next_state {
 				continue
 			}
@@ -314,8 +315,8 @@ func (i *Indicator) ExtractTransitions(basic_combis Combinations, terms []*Term,
 			// Create transation and add to transition array
 			transition := FsmTransition{
 				Current: cur_state,
-				Token: []Token{Token{term.Type, term.Value}},
-				Next: next_state,
+				Token:   []Token{Token{term.Type, term.Value}},
+				Next:    next_state,
 			}
 			transitions = append(transitions, transition)
 
@@ -324,8 +325,8 @@ func (i *Indicator) ExtractTransitions(basic_combis Combinations, terms []*Term,
 	}
 
 	// Same again, but see what happens when applying 'end'
-	// FIXME: Could just add {"end", ""} to the token array.  So we wouldn't need this
-	// code.
+	// FIXME: Could just add {"end", ""} to the token array.  So we
+	// wouldn't need this code.
 	for _, comb := range basic_combis {
 
 		newstate := i.ExerciseToken(comb, nil, n)
@@ -339,8 +340,8 @@ func (i *Indicator) ExtractTransitions(basic_combis Combinations, terms []*Term,
 
 		transition := FsmTransition{
 			Current: cur_state,
-			Token: []Token{Token{"end", ""}},
-			Next: next_state,
+			Token:   []Token{Token{"end", ""}},
+			Next:    next_state,
 		}
 
 		transitions = append(transitions, transition)
@@ -355,9 +356,9 @@ func (i *Indicator) ExtractTransitions(basic_combis Combinations, terms []*Term,
 
 }
 
-// Find all 'basic states' and terms.  The basic states are the places in the tree
-// where state information can stored: Children of AND and children of NOT.
-// NOT nodes are never themselves basic state nodes.
+// Find all 'basic states' and terms.  The basic states are the places in
+// the tree where state information can stored: Children of AND and children
+// of NOT.  NOT nodes are never themselves basic state nodes.
 func (i *Indicator) DiscoverStates(n *Navigator) (Combination, []*Term) {
 
 	// Initialise
@@ -382,7 +383,8 @@ func (i *Indicator) DiscoverStates(n *Navigator) (Combination, []*Term) {
 			return nil
 		}
 
-		// If we got this far, and parent is AND or NOT, this is a basic state.
+		// If we got this far, and parent is AND or NOT, this is a
+		// basic state.
 		if n.parent[l].IsAnd() {
 			basic_states.Add(l)
 		}
@@ -407,18 +409,18 @@ func (l *Term) DumpTree(n *Navigator, indent int) {
 	if l.IsAnd() {
 		fmt.Println("AND")
 		for _, v := range l.And {
-			v.DumpTree(n, indent + 1)
+			v.DumpTree(n, indent+1)
 		}
 	}
 	if l.IsOr() {
 		fmt.Println("OR")
 		for _, v := range l.Or {
-			v.DumpTree(n, indent + 1)
+			v.DumpTree(n, indent+1)
 		}
 	}
 	if l.IsNot() {
 		fmt.Println("NOT")
-		l.Not.DumpTree(n, indent + 1)
+		l.Not.DumpTree(n, indent+1)
 	}
 	if l.IsMatchTerm() {
 		fmt.Println(l.Type, ":", l.Value)
@@ -446,4 +448,3 @@ func (i *Indicator) GenerateFsm() *Fsm {
 	return fsm
 
 }
-

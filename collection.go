@@ -1,8 +1,8 @@
-
-// Detector library includes classes for loading indicators, building FSMs from indicators,
-// using FSMs to analyze terms and make hit decisions.  Call CreateFsmCollection to create
-// a collection from indicators.  Call Reset method to start scanning, Update methods with
-// all tokens to scan, and then GetHits to find out the indicators which hit.
+// Detector library includes classes for loading indicators, building FSMs
+// from indicators, using FSMs to analyze terms and make hit decisions.
+// Call CreateFsmCollection to create a collection from indicators.  Call
+// Reset method to start scanning, Update methods with all tokens to scan,
+// and then GetHits to find out the indicators which hit.
 package detector
 
 import (
@@ -18,12 +18,14 @@ type FsmCollection struct {
 	// Map from FSM to Indicator
 	Indicators map[*FsmMap]*Indicator
 
-	// Map from activator tokens to array  of FSMs.  The tokens include all tokens which
-	// lead out of the 'init' state for each FSM.  By 'active', I'm refering to any
-	// FSM which has left the 'init' state.
+	// Map from activator tokens to array of FSMs.  The tokens include
+	// all tokens which lead out of the 'init' state for each FSM.  By
+	// 'active', I'm refering to any FSM which has left the 'init'
+	// state.
 	Activators map[Token][]*FsmMap
 
-	// The current state of all active FSMs, maps FSM to the current state string.
+	// The current state of all active FSMs, maps FSM to the current
+	// state string.
 	State map[*FsmMap]string
 }
 
@@ -35,8 +37,9 @@ func (c *FsmCollection) Dump() {
 	}
 }
 
-// Resets an FSM collection so that all FSMs revert to the inactive state.  This would be
-// called to forget existing scanning history when scanning something new.
+// Resets an FSM collection so that all FSMs revert to the inactive state.
+// This would be called to forget existing scanning history when scanning
+// something new.
 func (c *FsmCollection) Reset() {
 	c.State = map[*FsmMap]string{}
 }
@@ -44,8 +47,9 @@ func (c *FsmCollection) Reset() {
 // Update an FSM collection for a new token.
 func (c *FsmCollection) Update(token Token) {
 
-	// If the token is an activator, activate all relevant FSMs to the init state.
-	// The next code segment will apply the transition from init to the next state.
+	// If the token is an activator, activate all relevant FSMs to the
+	// init state.  The next code segment will apply the transition from
+	// init to the next state.
 	if fsms, ok := c.Activators[token]; ok {
 		for _, fsm := range fsms {
 			if _, ok = c.State[fsm]; !ok {
@@ -64,8 +68,8 @@ func (c *FsmCollection) Update(token Token) {
 
 }
 
-// Returns all active FSM hits.  This would be called once scanning is complete to
-// return hits.
+// Returns all active FSM hits.  This would be called once scanning is
+// complete to return hits.
 func (c *FsmCollection) GetHits() []*Indicator {
 
 	hits := []*Indicator{}
@@ -101,8 +105,7 @@ func CreateFsmCollection(ii *Indicators) *FsmCollection {
 		// Add mapping from FSM to corresponding indicator.
 		fsmc.Indicators[fsmm] = ind
 
-
-		// Get activator terms 
+		// Get activator terms
 		activs := fsm.GetActivators()
 
 		// Add activator terms to the activator map.
@@ -110,7 +113,8 @@ func CreateFsmCollection(ii *Indicators) *FsmCollection {
 			if _, ok := fsmc.Activators[activ]; !ok {
 				fsmc.Activators[activ] = nil
 			}
-			fsmc.Activators[activ] = append(fsmc.Activators[activ], fsmm)
+			fsmc.Activators[activ] = append(fsmc.Activators[activ],
+				fsmm)
 		}
 
 		// Append FSM to FSM list.
@@ -121,4 +125,3 @@ func CreateFsmCollection(ii *Indicators) *FsmCollection {
 	return &fsmc
 
 }
-

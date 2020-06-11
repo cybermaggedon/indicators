@@ -1,17 +1,16 @@
-
 package detector
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"fmt"
+	"io/ioutil"
 )
 
 // Represents an indicator set.  Is JSON serialisable
 type Indicators struct {
-	Description string `json:"description,omitempty"`
-	Version string `json:"version,omitempty"`
-	Indicators []*Indicator `json:"indicators,omitempty"`
+	Description string       `json:"description,omitempty"`
+	Version     string       `json:"version,omitempty"`
+	Indicators  []*Indicator `json:"indicators,omitempty"`
 }
 
 // Add an indicator
@@ -22,7 +21,9 @@ func (ii *Indicators) Add(i *Indicator) {
 // Get an indicator by ID.  O(n)
 func (ii *Indicators) Get(id string) *Indicator {
 	for _, v := range ii.Indicators {
-		if v.Id == id { return v }
+		if v.Id == id {
+			return v
+		}
 	}
 	return nil
 }
@@ -30,16 +31,16 @@ func (ii *Indicators) Get(id string) *Indicator {
 // An indicator descriptor describes the results of a hit.
 type Descriptor struct {
 	Description string `json:"description,omitempty"`
-	Category string `json:"category,omitempty"`
-	Author string `json:"author,omitempty"`
-	Source string `json:"source,omitempty"`
-	Type string `json:"type,omitempty"`
-	Value string `json:"value,omitempty"`
+	Category    string `json:"category,omitempty"`
+	Author      string `json:"author,omitempty"`
+	Source      string `json:"source,omitempty"`
+	Type        string `json:"type,omitempty"`
+	Value       string `json:"value,omitempty"`
 }
 
 // An indicator
 type Indicator struct {
-	Id string  `json:"id,omitempty"`
+	Id         string     `json:"id,omitempty"`
 	Descriptor Descriptor `json:"descriptor,omitempty"`
 	Term
 }

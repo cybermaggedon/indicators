@@ -4,8 +4,8 @@ import (
 	"strconv"
 )
 
-// The term tree is a simple tree, it is useful to collect information to allow some
-// other forms of navigation in the tree.
+// The term tree is a simple tree, it is useful to collect information to
+// allow some other forms of navigation in the tree.
 type Navigator struct {
 
 	// Maps state name to logic element
@@ -20,9 +20,9 @@ type Navigator struct {
 	// Set of basic states
 	basic_states Combination
 
-	// Array of all match terms i.e. only have key/value pairs, not AND/OR/NOT.
+	// Array of all match terms i.e. only have key/value pairs, not
+	// AND/OR/NOT.
 	terms []*Term
-	
 }
 
 // Constructs a navigator from a term tree.
@@ -31,8 +31,8 @@ func (i *Indicator) BuildNavigator() *Navigator {
 	// Allocate Navigator.
 	n := &Navigator{
 		logic_state: make(map[string]*Term),
-		state_name: make(map[*Term]string),
-		parent: make(map[*Term]*Term),
+		state_name:  make(map[*Term]string),
+		parent:      make(map[*Term]*Term),
 	}
 
 	// New state IDs start at 1.

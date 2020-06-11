@@ -1,4 +1,3 @@
-
 package detector
 
 import (
@@ -7,24 +6,24 @@ import (
 
 // An indicator term, can be one of or, and, not or type/value pair.
 type Term struct {
-	Type string `json:"type,omitempty"`
-	Value string `json:"value,omitempty"`
-	And []*Term `json:"and,omitempty"`
-	Or []*Term `json:"or,omitempty"`
-	Not *Term `json:"not,omitempty"`
+	Type  string  `json:"type,omitempty"`
+	Value string  `json:"value,omitempty"`
+	And   []*Term `json:"and,omitempty"`
+	Or    []*Term `json:"or,omitempty"`
+	Not   *Term   `json:"not,omitempty"`
 }
 
 // Dump a term
 func (l *Term) Dump(indent int) {
 	if l.Type != "" && l.Value != "" {
-		for v := 0; v < indent + 2; v++ {
+		for v := 0; v < indent+2; v++ {
 			fmt.Print("  ")
 		}
 		fmt.Println(l.Type, ":", l.Value)
 		return
 	}
 	if len(l.And) > 0 {
-		for v := 0; v < indent + 2; v++ {
+		for v := 0; v < indent+2; v++ {
 			fmt.Print("  ")
 		}
 		fmt.Println("And")
@@ -34,7 +33,7 @@ func (l *Term) Dump(indent int) {
 		return
 	}
 	if len(l.Or) > 0 {
-		for v := 0; v < indent + 2; v++ {
+		for v := 0; v < indent+2; v++ {
 			fmt.Print("  ")
 		}
 		fmt.Println("Or")
@@ -44,7 +43,7 @@ func (l *Term) Dump(indent int) {
 		return
 	}
 	if l.Not != nil {
-		for v := 0; v < indent + 2; v++ {
+		for v := 0; v < indent+2; v++ {
 			fmt.Print("  ")
 		}
 		fmt.Println("Not")
@@ -155,10 +154,11 @@ func (l *Term) Evaluate(state *Combination, n *Navigator) {
 
 }
 
-// Works out state change based on activating a term - used when a match term becomes true
+// Works out state change based on activating a term - used when a match
+// term becomes true
 func (l *Term) Activate(state *Combination, n *Navigator) {
 
-	if (!l.IsMatchTerm()) {
+	if !l.IsMatchTerm() {
 		panic("Activate called on non-term")
 	}
 
@@ -173,18 +173,19 @@ func (l *Term) Activate(state *Combination, n *Navigator) {
 
 }
 
-// A walk observer is a callback used to study every term in a term tree, breadth-first
+// A walk observer is a callback used to study every term in a term tree,
+// breadth-first
 type WalkObserver func(*Term, interface{}, *Term) error
 
 // Walks a term tree, calling a callback for every term
-func (l* Term) WalkState(wo WalkObserver, state interface{}, parent *Term) error {
-	for _, v := range(l.And) {
+func (l *Term) WalkState(wo WalkObserver, state interface{}, parent *Term) error {
+	for _, v := range l.And {
 		err := v.WalkState(wo, state, l)
 		if err != nil {
 			return err
 		}
 	}
-	for _, v := range(l.Or) {
+	for _, v := range l.Or {
 		err := v.WalkState(wo, state, l)
 		if err != nil {
 			return err
@@ -201,6 +202,6 @@ func (l* Term) WalkState(wo WalkObserver, state interface{}, parent *Term) error
 }
 
 // Wrapper for WalkState passing nil defaults
-func (l* Term) Walk(wo WalkObserver) error {
+func (l *Term) Walk(wo WalkObserver) error {
 	return l.WalkState(wo, nil, nil)
 }

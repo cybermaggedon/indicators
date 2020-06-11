@@ -1,4 +1,3 @@
-
 package detector
 
 // A Combination represents a set of terms.
@@ -51,8 +50,8 @@ func (c *Combination) Iter() chan *Term {
 	return ch
 }
 
-// Returns an identical copy of the Combination.  Altering the new Combination does not
-// affect the old
+// Returns an identical copy of the Combination.  Altering the new
+// Combination does not affect the old
 func (c *Combination) Copy() Combination {
 	c2 := NewCombination()
 	for k, _ := range c.set {
