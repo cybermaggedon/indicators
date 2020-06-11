@@ -33,6 +33,15 @@ type Fsm struct {
 	Transitions []FsmTransition
 }
 
+func (fsm *Fsm) Dump() {
+	for _, v := range fsm.Transitions {
+		for _, w := range v.Token {
+			fmt.Printf("%s -> %s:%s -> %s\n",
+				v.Current, w.Type, w.Value, v.Next)
+		}
+	}
+}
+
 // Describes an event causing an FSM transition, consists of a current
 // state, and a token.
 type FsmEvent struct {
@@ -42,6 +51,13 @@ type FsmEvent struct {
 
 // An FSM optimised for navigation, maps FSM events to new states.
 type FsmMap map[FsmEvent]string
+
+func (fsm *FsmMap) Dump() {
+	for event, next := range *fsm {
+		fmt.Printf("%s -> %s:%s -> %s\n",
+			event.State, event.Token.Type, event.Token.Value, next)
+	}
+}
 
 // Converts an Fsm to an FsmMap.
 func (fsm *Fsm) Mapify() *FsmMap {
