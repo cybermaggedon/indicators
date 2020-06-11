@@ -94,8 +94,8 @@ func (l *Term) RecordEnd(state *Combination, n *Navigator) {
 			return
 		}
 		state.Add(l)
-		if n.parent[l] != nil {
-			n.parent[l].Evaluate(state, n)
+		if n.Parent[l] != nil {
+			n.Parent[l].Evaluate(state, n)
 		}
 	}
 	if l.IsMatchTerm() {
@@ -110,7 +110,7 @@ func (l *Term) Evaluate(state *Combination, n *Navigator) {
 		return
 	}
 
-	parent := n.parent[l]
+	parent := n.Parent[l]
 
 	if l.IsAnd() {
 		count := 0
@@ -167,8 +167,8 @@ func (l *Term) Activate(state *Combination, n *Navigator) {
 	}
 
 	state.Add(l)
-	if n.parent[l] != nil {
-		n.parent[l].Evaluate(state, n)
+	if n.Parent[l] != nil {
+		n.Parent[l].Evaluate(state, n)
 	}
 
 }

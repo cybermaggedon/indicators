@@ -205,7 +205,7 @@ func NameCombinationState(comb *Combination, n *Navigator, l *Term) string {
 	// FIXME: Use Copy method.
 	states := make([]string, 0, comb.Size())
 	for k := range comb.Iter() {
-		states = append(states, n.state_name[k][1:])
+		states = append(states, n.StateName[k][1:])
 	}
 
 	// Sort strings, so that this function is always stable.
@@ -314,7 +314,7 @@ func (i *Indicator) ExtractTransitions(basic_combis Combinations, terms []*Term,
 			// out all states which aren't basic states.
 			newstate2 := NewCombination()
 			for v := range newstate.Iter() {
-				if n.basic_states.Contains(v) {
+				if n.BasicStates.Contains(v) {
 					newstate2.Add(v)
 				}
 			}
@@ -390,7 +390,7 @@ func (i *Indicator) DiscoverStates(n *Navigator) (Combination, []*Term) {
 		}
 
 		// Skip the root element
-		if n.parent[l] == nil {
+		if n.Parent[l] == nil {
 			return nil
 		}
 
@@ -401,10 +401,10 @@ func (i *Indicator) DiscoverStates(n *Navigator) (Combination, []*Term) {
 
 		// If we got this far, and parent is AND or NOT, this is a
 		// basic state.
-		if n.parent[l].IsAnd() {
+		if n.Parent[l].IsAnd() {
 			basic_states.Add(l)
 		}
-		if n.parent[l].IsNot() {
+		if n.Parent[l].IsNot() {
 			basic_states.Add(l)
 		}
 		return nil
@@ -420,7 +420,7 @@ func (l *Term) DumpTree(n *Navigator, indent int) {
 	for i := 0; i < indent; i++ {
 		fmt.Print("  ")
 	}
-	fmt.Print(n.state_name[l], ": ")
+	fmt.Print(n.StateName[l], ": ")
 
 	if l.IsAnd() {
 		fmt.Println("AND")
@@ -450,10 +450,10 @@ func (i *Indicator) GenerateFsm() *Fsm {
 	n := i.BuildNavigator()
 
 	// Get all combinations of the basic states.
-	combinations := GetCombinations(n.basic_states.Iter())
+	combinations := GetCombinations(n.BasicStates.Iter())
 
 	// Get all transitions.
-	fsm := i.ExtractTransitions(combinations, n.terms, n)
+	fsm := i.ExtractTransitions(combinations, n.Terms, n)
 
 	// Flatten FSM
 	fsm.Flatten()

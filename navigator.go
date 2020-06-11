@@ -9,20 +9,20 @@ import (
 type Navigator struct {
 
 	// Maps state name to logic element
-	logic_state map[string]*Term
+	LogicState map[string]*Term
 
 	// Maps logic element to state name
-	state_name map[*Term]string
+	StateName map[*Term]string
 
 	// Element to parent.  root element has parent = nil
-	parent map[*Term]*Term
+	Parent map[*Term]*Term
 
 	// Set of basic states
-	basic_states Combination
+	BasicStates Combination
 
 	// Array of all match terms i.e. only have key/value pairs, not
 	// AND/OR/NOT.
-	terms []*Term
+	Terms []*Term
 }
 
 // Constructs a navigator from a term tree.
@@ -30,9 +30,9 @@ func (i *Indicator) BuildNavigator() *Navigator {
 
 	// Allocate Navigator.
 	n := &Navigator{
-		logic_state: make(map[string]*Term),
-		state_name:  make(map[*Term]string),
-		parent:      make(map[*Term]*Term),
+		LogicState: make(map[string]*Term),
+		StateName:  make(map[*Term]string),
+		Parent:     make(map[*Term]*Term),
 	}
 
 	// New state IDs start at 1.
@@ -42,14 +42,14 @@ func (i *Indicator) BuildNavigator() *Navigator {
 	i.Walk(func(l *Term, state interface{}, par *Term) error {
 		state_id := "s" + strconv.Itoa(next_id)
 		next_id++
-		n.state_name[l] = state_id
-		n.logic_state[state_id] = l
-		n.parent[l] = par
+		n.StateName[l] = state_id
+		n.LogicState[state_id] = l
+		n.Parent[l] = par
 		return nil
 	})
 
 	// Collect state information
-	n.basic_states, n.terms = i.DiscoverStates(n)
+	n.BasicStates, n.Terms = i.DiscoverStates(n)
 
 	return n
 
