@@ -1,4 +1,4 @@
-package detector
+package indicators
 
 import (
 	"fmt"

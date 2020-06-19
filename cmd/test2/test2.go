@@ -3,7 +3,7 @@ package main
 
 import (
 	"log"
-	det "github.com/cybermaggedon/detector"
+	det "github.com/cybermaggedon/indicators"
 	
 )
 

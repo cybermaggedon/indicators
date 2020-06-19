@@ -1,4 +1,4 @@
-package detector
+package indicators
 
 // A Combination represents a set of terms.
 type Combination struct {

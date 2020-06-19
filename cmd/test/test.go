@@ -4,7 +4,7 @@ package main
 import (
 	"log"
 	"fmt"
-	det "github.com/cybermaggedon/detector"
+	det "github.com/cybermaggedon/indicators"
 )
 
 func main() {

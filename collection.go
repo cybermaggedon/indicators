@@ -3,7 +3,7 @@
 // Call CreateFsmCollection to create a collection from indicators.  Call
 // Reset method to start scanning, Update methods with all tokens to scan,
 // and then GetHits to find out the indicators which hit.
-package detector
+package indicators
 
 import (
 	"fmt"

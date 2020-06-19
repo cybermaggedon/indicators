@@ -1,4 +1,4 @@
-package detector
+package indicators
 
 import (
 	"encoding/json"
@@ -57,7 +57,7 @@ func LoadIndicators(data []byte) (*Indicators, error) {
 	// Having loaded indicators, set probability to 1.0 for anything
 	// without a probability.  Can't tell the difference between
 	// setting 0 and a missing field, but in practice specifying a
-	// probability of 0 doesn't make sense. 
+	// probability of 0 doesn't make sense.
 	for i, _ := range ii.Indicators {
 		if ii.Indicators[i].Descriptor.Probability == 0.0 {
 			ii.Indicators[i].Descriptor.Probability = 1.0
