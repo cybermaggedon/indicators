@@ -314,10 +314,10 @@ func (i *Indicator) ExtractTransitions(basic_combis Combinations, terms []*Term,
 			// out all states which aren't basic states.
 			var next_state string
 
-			if newstate.Contains(&i.Term ) {
+			if newstate.Contains(&i.Term) {
 				next_state = "hit"
 			} else {
-			
+
 				newstate2 := NewCombination()
 				for v := range newstate.Iter() {
 					if n.BasicStates.Contains(v) {
@@ -358,17 +358,17 @@ func (i *Indicator) ExtractTransitions(basic_combis Combinations, terms []*Term,
 		cur_state := NameCombinationState(&comb, n, root)
 		var next_state string
 
-		if newstate.Contains(&i.Term ) {
+		if newstate.Contains(&i.Term) {
 			next_state = "hit"
 		} else {
-			
+
 			newstate2 := NewCombination()
 			for v := range newstate.Iter() {
 				if n.BasicStates.Contains(v) {
 					newstate2.Add(v)
 				}
 			}
-			
+
 			// Convert this new state to a state name.
 			next_state =
 				NameCombinationState(&newstate2, n, root)

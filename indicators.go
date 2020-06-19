@@ -30,12 +30,13 @@ func (ii *Indicators) Get(id string) *Indicator {
 
 // An indicator descriptor describes the results of a hit.
 type Descriptor struct {
-	Description string `json:"description,omitempty"`
-	Category    string `json:"category,omitempty"`
-	Author      string `json:"author,omitempty"`
-	Source      string `json:"source,omitempty"`
-	Type        string `json:"type,omitempty"`
-	Value       string `json:"value,omitempty"`
+	Description string  `json:"description,omitempty"`
+	Category    string  `json:"category,omitempty"`
+	Author      string  `json:"author,omitempty"`
+	Source      string  `json:"source,omitempty"`
+	Type        string  `json:"type,omitempty"`
+	Value       string  `json:"value,omitempty"`
+	Probability float32 `json:"probability,omitempty"`
 }
 
 // An indicator
@@ -52,6 +53,17 @@ func LoadIndicators(data []byte) (*Indicators, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	// Having loaded indicators, set probability to 1.0 for anything
+	// without a probability.  Can't tell the difference between
+	// setting 0 and a missing field, but in practice specifying a
+	// probability of 0 doesn't make sense. 
+	for i, _ := range ii.Indicators {
+		if ii.Indicators[i].Descriptor.Probability == 0.0 {
+			ii.Indicators[i].Descriptor.Probability = 1.0
+		}
+	}
+
 	return &ii, nil
 }
 
@@ -83,5 +95,6 @@ func (i *Indicator) Dump() {
 	fmt.Println("  Source:", i.Descriptor.Source)
 	fmt.Println("  Type:", i.Descriptor.Type)
 	fmt.Println("  Value:", i.Descriptor.Value)
+	fmt.Println("  Probability:", i.Descriptor.Probability)
 	i.Term.Dump(0)
 }
